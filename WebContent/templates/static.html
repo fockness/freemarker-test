@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	描述：${description}
+	<br /> 集合大小:${nameList?size}
+	<!------------------------------------------------------------------------->
+	<br /> 迭代list集合：
+	<br />
+	<#list nameList as names> 这是第${names_index+1}个人，叫做：<label style="color: red">${names}</label> if判断： <br />
+	
+	<!--names不为空并且names等于aa并且长度大于0-->	
+	<#if (names??) &&  (names== "aa") && (names?length gt 0)> 十五~~ 
+	<#elseif (names== "bb")>
+	<#--注意这里没有返回而是在最后面-->  bb~· 
+	<#else>
+	ha~~ 
+	</#if> <br />
+	<!------------------------------------------------------------------------->
+	</#list>
+	迭代map集合：
+	<br />
+	<#list weaponMap?keys as key> key--->${key}<br />
+	value----->${weaponMap[key]!("null")} 
+	<#-- fremarker 不支持null, 可以用！
+	来代替为空的值。 其实也可以给一个默认值 value-----${weaponMap[key]?default("null")} 还可以
+	在输出前判断是否为null <#ifweaponMap[key]??></#if>都可以 
+	--> 
+	<br/> 
+	</#list>
+	
+	<!------------------------------------------------------------------------->
+	普通变量的使用:</br>
+	值带!在null时可以使用默认值${a!"123"},${a!}</br>
+	对象或其属性可能为null的判断${(obj.name)!"234"}</br>
+	变量存在则输出不存在则不输出${a?if_exists},${a?default("111")}</br>
+	
+	<!------------------------------------------------------------------------->
+	定义变量b
+	<#assign b = "999" />
+	${b}</br>
+	<#assign lastUpdated = "2009-01-07 15:05"?datetime("yyyy-MM-dd HH:mm") />
+	${lastUpdated?string("yyyy-MM-dd HH:mm:ss zzzz")};</br>
+	<#assign foo=true />
+    ${foo?string("是foo","非foo")}</br>
+    <#assign c=56>
+    ${c?is_number?string('yes', 'no')}
+    
+    <!------------------------------------------------------------------------->
+   	自定义指令(标签)
+   	<@content name="chenghui" age="120"> 
+		  ${output} 
+		  ${append} 
+ 	</@content> 
+   	</br>
+   	<!------------------------------------------------------------------------->
+   	宏(自定义指令)
+   	<#macro test foo bar="Bar" baaz=-1>
+		Test text, and the params: ${foo}, ${bar}, ${baaz}
+	</#macro>
+   	<@test foo="a" bar="b" baaz=5*5-2/></br>
+	<@test foo="a" bar="b"/></br>
+	<@test foo="a" baaz=5*5-2/></br>
+	<@test foo="a"/></br>
+	
+	
+	<#macro list title items>
+	<p>${title?cap_first}:
+	<ul>
+       <#list items as x>
+         <li>${x?cap_first}
+       </#list>
+	</ul>
+	</#macro>
+	<@list items=["mouse", "elephant", "python"] title="Animals"/>
+	</br>
+	
+	<#macro book>
+		j2ee
+	</#macro>
+	<@book/>
+	
+	</br>
+	<#macro array lists>
+		<#list lists as item>
+			${item!"123"}
+		</#list>
+	</#macro>
+	<@array lists=["2345", "1234"]/>
+	</br>
+	<!------------------------------------------------------------------------->
+	nested是可选的，可以在macro和macro之间使用在任何位置和任意次数
+	<#macro tag>
+		<#nested/>
+	</#macro>
+	
+	<@tag>
+		<ul>
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+		</ul>
+	</@tag>
+	
+</body>
+</html>
